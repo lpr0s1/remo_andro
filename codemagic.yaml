@@ -1,0 +1,27 @@
+workflows:
+  android-build:
+    name: Android App Build
+    instance_type: linux_x2
+    environment:
+      flutter: stable
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+    scripts:
+      - name: Generer l environnement Android
+        script: |
+          flutter create . --platforms=android
+      - name: Recuperer les dependances Pub
+        script: |
+          flutter pub get
+      - name: Generer l icone de l application
+        script: |
+          dart run flutter_launcher_icons
+      - name: Compiler pour Android (APK)
+        script: |
+          flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*-release.apk
